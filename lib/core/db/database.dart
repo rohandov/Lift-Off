@@ -12,4 +12,17 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Stream<List<Workout>> watchRecentWorkouts() {
+    return (select(workouts)
+          ..orderBy([(t) => OrderingTerm.desc(t.startedAt)]))
+        .watch();
+  }
+
+  Stream<List<WorkoutExercise>> watchExercisesForWorkout(int workoutId) {
+    return (select(workoutExercises)
+          ..where((t) => t.workoutId.equals(workoutId))
+          ..orderBy([(t) => OrderingTerm.asc(t.position)]))
+        .watch();
+  }
 }
