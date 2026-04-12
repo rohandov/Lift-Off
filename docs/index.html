@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lift Off — Track your lifts. No cloud. No noise.</title>
+  <meta name="description" content="A minimal, offline-first workout tracker. Track exercises, log sets, review history — all on your device.">
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta property="og:title" content="Lift Off — Workout Tracker">
+  <meta property="og:description" content="Track your lifts. No cloud. No noise.">
+  <meta property="og:image" content="icon.png">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root {
+      --bg: #0B0B0F;
+      --bg-raised: #111118;
+      --text: #E0E0E0;
+      --text-dim: rgba(255,255,255,0.55);
+      --green: #4ADE80;
+      --purple: #9B59B6;
+      --card-border: rgba(255,255,255,0.08);
+      --radius-card: 14px;
+      --radius-btn: 12px;
+    }
+
+    html { scroll-behavior: smooth }
+
+    body {
+      font-family: 'Outfit', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ——— Ambient background glow ——— */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -40%; left: -20%;
+      width: 80vw; height: 80vw;
+      background: radial-gradient(circle, rgba(155,89,182,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%; right: -15%;
+      width: 70vw; height: 70vw;
+      background: radial-gradient(circle, rgba(74,222,128,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    section, header, footer { position: relative; z-index: 1; }
+
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ——— HERO ——— */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .hero-icon {
+      width: 96px; height: 96px;
+      border-radius: 22px;
+      box-shadow: 0 0 60px rgba(155,89,182,0.25), 0 0 120px rgba(74,222,128,0.1);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) }
+      50% { transform: translateY(-8px) }
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--text-dim);
+      font-weight: 400;
+      max-width: 420px;
+      line-height: 1.5;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover { transform: translateY(-2px); text-decoration: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), #2dd668);
+      color: #0B0B0F;
+      box-shadow: 0 4px 24px rgba(74,222,128,0.25);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(74,222,128,0.35); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--card-border);
+    }
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .btn svg { width: 20px; height: 20px; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      opacity: 0.3;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 0.3; transform: translateY(0) }
+      50% { opacity: 0.15; transform: translateY(6px) }
+    }
+
+    /* ——— SECTION COMMON ——— */
+    .section {
+      padding: 6rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 540px;
+    }
+
+    /* ——— FEATURES ——— */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      border-radius: var(--radius-card);
+      border: 1px solid var(--card-border);
+      padding: 2rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .feature-card .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+    }
+    .feature-card .card-icon svg { width: 22px; height: 22px; }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .card-purple  { background: linear-gradient(135deg, #5C35A0, #1A1030); }
+    .card-teal    { background: linear-gradient(135deg, #1E6680, #0A2028); }
+    .card-indigo  { background: linear-gradient(135deg, #3540A0, #121530); }
+    .card-forest  { background: linear-gradient(135deg, #1C6640, #0E2818); }
+
+    /* ——— HOW IT WORKS ——— */
+    .steps-section { background: var(--bg-raised); border-radius: 0; }
+    .steps-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 1.5rem;
+    }
+
+    .steps {
+      display: flex;
+      gap: 2rem;
+      margin-top: 3rem;
+      align-items: flex-start;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #0B0B0F;
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 0 30px rgba(74,222,128,0.2);
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .step p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Connector lines between steps */
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 26px;
+      left: calc(50% + 34px);
+      width: calc(100% - 68px + 2rem);
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), rgba(74,222,128,0.15));
+      z-index: 0;
+    }
+
+    /* ——— PRIVACY ——— */
+    .privacy-section {
+      background: var(--bg-raised);
+      border-radius: 0;
+    }
+    .privacy-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .privacy-icon-wrap {
+      flex-shrink: 0;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(74,222,128,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .privacy-icon-wrap svg { width: 36px; height: 36px; color: var(--green); }
+
+    .privacy-text h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+    .privacy-text p {
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 520px;
+    }
+    .privacy-text a { margin-top: 0.75rem; display: inline-block; }
+
+    /* ——— DOWNLOAD CTA ——— */
+    .cta {
+      text-align: center;
+      padding: 6rem 1.5rem 4rem;
+    }
+    .cta .section-title { margin-bottom: 0.75rem; }
+    .cta p {
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    /* ——— FOOTER ——— */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem 3rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--text-dim); }
+    footer a:hover { color: var(--text); }
+
+    /* ——— FADE-IN ANIMATION ——— */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 700px) {
+      .features-grid { grid-template-columns: 1fr; }
+
+      .steps { flex-direction: column; gap: 2.5rem; }
+      .step:not(:last-child)::after { display: none; }
+
+      .privacy-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+
+      .section { padding: 4rem 1.25rem; }
+      .steps-inner, .privacy-inner { padding: 4rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== HERO ====== -->
+  <header class="hero">
+    <img src="icon.png" alt="Lift Off icon" class="hero-icon" width="96" height="96">
+    <h1 class="hero-title">Lift Off</h1>
+    <p class="hero-tagline">Track your lifts. No cloud. No noise.</p>
+    <div class="hero-buttons">
+      <a href="https://play.google.com/store/apps/details?id=com.rohanvora.lift_off" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Get on Google Play
+      </a>
+      <a href="https://github.com/rohandov/Lift-Off/blob/main/PRIVACY.md" class="btn btn-ghost">Privacy Policy</a>
+    </div>
+    <div class="scroll-hint">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </header>
+
+  <!-- ====== FEATURES ====== -->
+  <section class="section">
+    <div class="fade-in">
+      <p class="section-label">Features</p>
+      <h2 class="section-title">Everything you need,<br>nothing you don't.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card card-purple fade-in">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <h3>Exercise Library</h3>
+        <p>Build and organize your personal exercise collection. Search, filter, and pick exactly what you need.</p>
+      </div>
+      <div class="feature-card card-teal fade-in">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Workout Sessions</h3>
+        <p>Log sets in real time with weight, reps, and RPE. Stay focused on the bar, not the app.</p>
+      </div>
+      <div class="feature-card card-indigo fade-in">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3>Presets</h3>
+        <p>Save your go-to routines as reusable templates. One tap to load and start lifting.</p>
+      </div>
+      <div class="feature-card card-forest fade-in">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Workout History</h3>
+        <p>Review past sessions, spot trends, and track progress over time — all stored locally.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="steps-section">
+    <div class="steps-inner">
+      <div class="fade-in">
+        <p class="section-label">How it works</p>
+        <h2 class="section-title">Three steps. Zero friction.</h2>
+      </div>
+      <div class="steps fade-in">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Pick exercises</h3>
+          <p>Choose from your library or create new ones on the fly.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Track sets</h3>
+          <p>Log weight, reps, and RPE as you go. Quick and distraction-free.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Review history</h3>
+          <p>See every session and watch your progress over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRIVACY ====== -->
+  <section class="section">
+    <div class="privacy-inner" style="max-width:none;padding:0;">
+      <div class="privacy-icon-wrap fade-in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="privacy-text fade-in">
+        <h2>Your data stays on your device.</h2>
+        <p>Lift Off doesn't collect, store, or transmit any personal data. No accounts, no analytics, no cloud sync. Your workout history lives on your phone and nowhere else.</p>
+        <a href="https://github.com/rohandov/Lift-Off/blob/main/PRIVACY.md">Read the full privacy policy &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DOWNLOAD CTA ====== -->
+  <section class="cta">
+    <div class="fade-in">
+      <h2 class="section-title">Ready to lift off?</h2>
+      <p>Free. Offline. Yours.</p>
+      <a href="https://play.google.com/store/apps/details?id=com.rohanvora.lift_off" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Get on Google Play
+      </a>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    Built by <a href="https://github.com/rohandov">Rohan Vora</a> · <a href="https://github.com/rohandov/Lift-Off">View on GitHub</a>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = `${i * 80}ms`;
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
