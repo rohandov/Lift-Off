@@ -57,10 +57,9 @@ class WorkoutScreen extends ConsumerWidget {
           itemBuilder: (context, i) {
             final ex = session.exercises[i];
             return Card(
-              child: ListTile(
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
                 key: Key('workout-row-$i'),
-                onTap: () =>
-                    ref.read(currentWorkoutProvider.notifier).toggleAt(i),
                 leading: Icon(iconFor(ex.iconName),
                     color: ex.isCompleted ? Colors.white38 : null),
                 title: Text(
@@ -77,9 +76,22 @@ class WorkoutScreen extends ConsumerWidget {
                     color: ex.isCompleted ? Colors.white24 : null,
                   ),
                 ),
-                trailing: ex.isCompleted
-                    ? const Icon(Icons.check_circle, color: Colors.greenAccent)
-                    : const Icon(Icons.radio_button_unchecked),
+                trailing: _TrailingStatus(exercise: ex),
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                children: [
+                  for (var s = 0; s < ex.sets; s++)
+                    CheckboxListTile(
+                      key: Key('workout-row-$i-set-$s'),
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: ex.completedSets[s],
+                      onChanged: (_) => ref
+                          .read(currentWorkoutProvider.notifier)
+                          .toggleSetAt(i, s),
+                      title: Text('Set ${s + 1}'),
+                      subtitle: Text('${ex.reps} reps'),
+                    ),
+                ],
               ),
             );
           },
@@ -145,5 +157,22 @@ class WorkoutScreen extends ConsumerWidget {
         );
       }
     }
+  }
+}
+
+class _TrailingStatus extends StatelessWidget {
+  const _TrailingStatus({required this.exercise});
+  final SessionExercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    if (exercise.isCompleted) {
+      return const Icon(Icons.check_circle, color: Colors.greenAccent);
+    }
+    final done = exercise.completedSets.where((c) => c).length;
+    return Text(
+      '$done/${exercise.sets}',
+      style: Theme.of(context).textTheme.bodySmall,
+    );
   }
 }

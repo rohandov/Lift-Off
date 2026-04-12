@@ -16,10 +16,10 @@ class WorkoutNotifier extends Notifier<WorkoutSession?> {
     );
   }
 
-  void toggleAt(int index) {
+  void toggleSetAt(int exerciseIndex, int setIndex) {
     final current = state;
     if (current == null) return;
-    state = current.toggleAt(index);
+    state = current.toggleSetAt(exerciseIndex, setIndex);
   }
 
   void discard() => state = null;

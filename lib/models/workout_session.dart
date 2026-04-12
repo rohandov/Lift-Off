@@ -7,7 +7,7 @@ class SessionExercise {
   final String iconName;
   final int sets;
   final String reps;
-  final bool isCompleted;
+  final List<bool> completedSets;
 
   const SessionExercise({
     required this.exerciseId,
@@ -15,16 +15,19 @@ class SessionExercise {
     required this.iconName,
     required this.sets,
     required this.reps,
-    this.isCompleted = false,
+    required this.completedSets,
   });
 
-  SessionExercise copyWith({bool? isCompleted}) => SessionExercise(
+  bool get isCompleted =>
+      completedSets.isNotEmpty && completedSets.every((c) => c);
+
+  SessionExercise copyWith({List<bool>? completedSets}) => SessionExercise(
         exerciseId: exerciseId,
         name: name,
         iconName: iconName,
         sets: sets,
         reps: reps,
-        isCompleted: isCompleted ?? this.isCompleted,
+        completedSets: completedSets ?? this.completedSets,
       );
 
   factory SessionExercise.fromExercise(Exercise e) => SessionExercise(
@@ -33,6 +36,7 @@ class SessionExercise {
         iconName: e.iconName,
         sets: e.defaultSets,
         reps: e.defaultReps,
+        completedSets: List<bool>.filled(e.defaultSets, false),
       );
 }
 
@@ -46,9 +50,12 @@ class WorkoutSession {
   bool get allDone =>
       exercises.isNotEmpty && exercises.every((e) => e.isCompleted);
 
-  WorkoutSession toggleAt(int index) {
+  WorkoutSession toggleSetAt(int exerciseIndex, int setIndex) {
     final next = List<SessionExercise>.from(exercises);
-    next[index] = next[index].copyWith(isCompleted: !next[index].isCompleted);
+    final ex = next[exerciseIndex];
+    final newCompleted = List<bool>.from(ex.completedSets);
+    newCompleted[setIndex] = !newCompleted[setIndex];
+    next[exerciseIndex] = ex.copyWith(completedSets: newCompleted);
     return WorkoutSession(startedAt: startedAt, exercises: next);
   }
 }
