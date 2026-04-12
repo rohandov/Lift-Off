@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Lift Off</title>
+  <meta name="description" content="Privacy Policy for Lift Off — a minimal, offline-first workout tracker that collects no data.">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root {
+      --bg: #0B0B0F;
+      --bg-raised: #111118;
+      --text: #E0E0E0;
+      --text-dim: rgba(255,255,255,0.55);
+      --green: #4ADE80;
+      --purple: #9B59B6;
+      --card-border: rgba(255,255,255,0.08);
+      --radius-card: 14px;
+      --radius-btn: 12px;
+    }
+
+    html { scroll-behavior: smooth }
+
+    body {
+      font-family: 'Outfit', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -40%; left: -20%;
+      width: 80vw; height: 80vw;
+      background: radial-gradient(circle, rgba(155,89,182,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%; right: -15%;
+      width: 70vw; height: 70vw;
+      background: radial-gradient(circle, rgba(74,222,128,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main, footer { position: relative; z-index: 1; }
+
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ——— HEADER ——— */
+    .page-header {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 0;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); text-decoration: none; }
+    .back-link svg { width: 18px; height: 18px; }
+
+    /* ——— CONTENT ——— */
+    .privacy-content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .privacy-content h1 {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .last-updated {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: 2.5rem;
+    }
+
+    .privacy-content h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .privacy-content p {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .privacy-content strong {
+      color: var(--text);
+    }
+
+    .privacy-content a {
+      color: var(--green);
+    }
+
+    /* ——— FOOTER ——— */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem 3rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    footer a { color: var(--text-dim); }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 700px) {
+      .privacy-content { padding: 2rem 1.25rem 3rem; }
+      .page-header { padding: 2rem 1.25rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="./" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Lift Off
+    </a>
+  </header>
+
+  <main class="privacy-content">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: April 11, 2026</p>
+
+    <p>Lift Off ("the app") is a minimal, offline workout tracker developed by Rohan Vora.</p>
+
+    <h2>Data we collect</h2>
+    <p><strong>None.</strong> Lift Off does not collect, transmit, or share any personal information.</p>
+    <p>All workout data you enter (exercises, sets, reps, history) is stored locally on your device using an on-device SQLite database. This data never leaves your device.</p>
+
+    <h2>Data we share</h2>
+    <p><strong>None.</strong> The app does not communicate with any servers and does not share data with any third parties.</p>
+
+    <h2>Third-party services</h2>
+    <p>Lift Off does not use any third-party analytics, advertising, crash reporting, or tracking services.</p>
+
+    <h2>Permissions</h2>
+    <p>Lift Off does not request the internet permission or any runtime permissions. It is a fully offline application.</p>
+
+    <h2>Children's privacy</h2>
+    <p>Because Lift Off collects no data at all, it collects no data from children.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the updated version will be published at the same URL with a new "Last updated" date.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy can be directed to the project maintainer via the <a href="https://github.com/rohandov/Lift-Off">GitHub repository</a>.</p>
+  </main>
+
+  <footer>
+    Built by <a href="https://github.com/rohandov">Rohan Vora</a> · <a href="https://github.com/rohandov/Lift-Off">View on GitHub</a>
+  </footer>
+
+</body>
+</html>
