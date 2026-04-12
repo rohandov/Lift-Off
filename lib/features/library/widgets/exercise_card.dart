@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:lift_off/core/db/database.dart';
 import 'package:lift_off/core/icons.dart';
+import 'package:lift_off/core/theme/app_theme.dart';
 
 class ExerciseCard extends StatelessWidget {
   final Exercise exercise;
@@ -24,15 +25,20 @@ class ExerciseCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(kCardRadius),
       child: Ink(
         decoration: BoxDecoration(
-          color: isSelected
-              ? accent.withValues(alpha: 0.12)
-              : const Color(0xFF16161D),
-          borderRadius: BorderRadius.circular(14),
+          gradient: isSelected
+              ? null
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kCardGradientTop, kCardGradientBottom],
+                ),
+          color: isSelected ? accent.withValues(alpha: 0.12) : null,
+          borderRadius: BorderRadius.circular(kCardRadius),
           border: Border.all(
-            color: isSelected ? accent : Colors.white.withValues(alpha: 0.08),
+            color: isSelected ? accent : kCardBorder,
             width: isSelected ? 2 : 1,
           ),
         ),

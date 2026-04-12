@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lift_off/core/db/database.dart';
 import 'package:lift_off/core/icons.dart';
+import 'package:lift_off/core/widgets/gradient_card.dart';
 import 'package:lift_off/features/library/library_providers.dart';
 import 'package:lift_off/features/workout/workout_providers.dart';
 import 'package:lift_off/features/workout/workout_screen.dart';
@@ -35,7 +36,7 @@ class ReviewScreen extends ConsumerWidget {
             },
             itemBuilder: (context, i) {
               final ex = ordered[i];
-              return Card(
+              return GradientCard(
                 key: ValueKey(ex.id),
                 child: ListTile(
                   leading: Icon(iconFor(ex.iconName)),

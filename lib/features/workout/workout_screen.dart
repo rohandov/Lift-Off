@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lift_off/core/db/database.dart';
 import 'package:lift_off/core/icons.dart';
 import 'package:lift_off/core/providers.dart';
+import 'package:lift_off/core/widgets/gradient_card.dart';
 import 'package:lift_off/features/library/library_providers.dart';
 import 'package:lift_off/features/workout/workout_providers.dart';
 import 'package:lift_off/models/workout_session.dart';
@@ -56,8 +57,7 @@ class WorkoutScreen extends ConsumerWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 8),
           itemBuilder: (context, i) {
             final ex = session.exercises[i];
-            return Card(
-              clipBehavior: Clip.antiAlias,
+            return GradientCard(
               child: ExpansionTile(
                 key: Key('workout-row-$i'),
                 leading: Icon(iconFor(ex.iconName),
