@@ -49,3 +49,8 @@ app.*.map.json
 
 # Superpowers brainstorm session data
 .superpowers/
+
+# Android signing
+/android/key.properties
+*.jks
+*.keystore
