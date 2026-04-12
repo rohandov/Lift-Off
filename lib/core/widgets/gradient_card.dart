@@ -10,11 +10,13 @@ class GradientCard extends StatelessWidget {
   const GradientCard({
     super.key,
     required this.child,
+    this.gradient,
     this.clipBehavior = Clip.antiAlias,
     this.margin = const EdgeInsets.symmetric(vertical: 4),
   });
 
   final Widget child;
+  final Gradient? gradient;
   final Clip clipBehavior;
   final EdgeInsetsGeometry margin;
 
@@ -30,12 +32,13 @@ class GradientCard extends StatelessWidget {
           side: const BorderSide(color: kCardBorder),
         ),
         child: Ink(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [kCardGradientTop, kCardGradientBottom],
-            ),
+          decoration: BoxDecoration(
+            gradient: gradient ??
+                const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kCardGradientTop, kCardGradientBottom],
+                ),
           ),
           child: child,
         ),

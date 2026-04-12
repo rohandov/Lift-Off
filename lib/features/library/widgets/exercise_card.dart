@@ -28,13 +28,7 @@ class ExerciseCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(kCardRadius),
       child: Ink(
         decoration: BoxDecoration(
-          gradient: isSelected
-              ? null
-              : const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [kCardGradientTop, kCardGradientBottom],
-                ),
+          gradient: isSelected ? null : gradientForId(exercise.id),
           color: isSelected ? accent.withValues(alpha: 0.12) : null,
           borderRadius: BorderRadius.circular(kCardRadius),
           border: Border.all(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lift_off/core/db/database.dart';
+import 'package:lift_off/core/theme/app_theme.dart';
 import 'package:lift_off/core/widgets/gradient_card.dart';
 import 'package:lift_off/features/history/history_providers.dart';
 
@@ -14,6 +15,7 @@ class WorkoutTile extends ConsumerWidget {
     final exercisesAsync = ref.watch(workoutExercisesProvider(workout.id));
     final dateStr = _formatDate(workout.startedAt);
     return GradientCard(
+      gradient: gradientForId(workout.id),
       child: ExpansionTile(
         title: Text(dateStr),
         subtitle: exercisesAsync.when(
