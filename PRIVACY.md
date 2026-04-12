@@ -33,4 +33,4 @@ If this policy changes, the updated version will be published at the same URL wi
 ## Contact
 
 Questions about this policy can be directed to the project maintainer via the GitHub repository:
-<https://github.com/rohandov/lift_off>
+<https://github.com/rohandov/Lift-Off>
