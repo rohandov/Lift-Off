@@ -52,13 +52,17 @@ class WorkoutScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text('Workout')),
-        body: ListView.separated(
+        body: Builder(builder: (context) {
+          final currentIndex = session.allDone
+              ? -1
+              : session.exercises.indexWhere((e) => !e.isCompleted);
+          return ListView.separated(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 120),
           itemCount: session.exercises.length,
           separatorBuilder: (_, __) => const SizedBox(height: 8),
           itemBuilder: (context, i) {
             final ex = session.exercises[i];
-            return GradientCard(
+            final card = GradientCard(
               gradient: gradientForId(ex.exerciseId),
               child: ExpansionTile(
                 key: Key('workout-row-$i'),
@@ -96,8 +100,10 @@ class WorkoutScreen extends ConsumerWidget {
                 ],
               ),
             );
+            return i == currentIndex ? _PulsingHighlight(child: card) : card;
           },
-        ),
+          );
+        }),
         bottomNavigationBar: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -175,6 +181,57 @@ class _TrailingStatus extends StatelessWidget {
     return Text(
       '$done/${exercise.sets}',
       style: Theme.of(context).textTheme.bodySmall,
+    );
+  }
+}
+
+class _PulsingHighlight extends StatefulWidget {
+  const _PulsingHighlight({required this.child});
+  final Widget child;
+
+  @override
+  State<_PulsingHighlight> createState() => _PulsingHighlightState();
+}
+
+class _PulsingHighlightState extends State<_PulsingHighlight>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2000),
+  )..repeat(reverse: true);
+
+  late final Animation<double> _t = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeInOut,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _t,
+      builder: (context, child) {
+        final v = _t.value; // 0..1
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(kCardRadius),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.15 + 0.25 * v),
+                blurRadius: 12 + 12 * v,
+                spreadRadius: 1 + 2 * v,
+              ),
+            ],
+          ),
+          child: child,
+        );
+      },
+      child: widget.child,
     );
   }
 }

@@ -44,7 +44,13 @@ class ReviewScreen extends ConsumerWidget {
                   leading: Icon(iconFor(ex.iconName)),
                   title: Text(ex.name),
                   subtitle: Text('${ex.defaultSets} × ${ex.defaultReps}'),
-                  trailing: const Icon(Icons.drag_handle),
+                  trailing: ReorderableDragStartListener(
+                    index: i,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(Icons.drag_handle),
+                    ),
+                  ),
                 ),
               );
             },
