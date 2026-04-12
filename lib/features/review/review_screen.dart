@@ -7,6 +7,7 @@ import 'package:lift_off/core/theme/app_theme.dart';
 import 'package:lift_off/core/widgets/gradient_card.dart';
 import 'package:lift_off/features/library/library_providers.dart';
 import 'package:lift_off/features/workout/workout_providers.dart';
+import 'package:lift_off/features/presets/widgets/save_preset_sheet.dart';
 import 'package:lift_off/features/workout/workout_screen.dart';
 import 'package:lift_off/models/workout_session.dart';
 
@@ -19,7 +20,20 @@ class ReviewScreen extends ConsumerWidget {
     final exercisesAsync = ref.watch(exercisesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Review')),
+      appBar: AppBar(
+        title: const Text('Review'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_add_outlined),
+            tooltip: 'Save as preset',
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => const SavePresetSheet(),
+            ),
+          ),
+        ],
+      ),
       body: exercisesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),

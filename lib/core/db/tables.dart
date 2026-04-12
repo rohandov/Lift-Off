@@ -38,3 +38,19 @@ class Settings extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+class Presets extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 64)();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+}
+
+class PresetExercises extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get presetId =>
+      integer().references(Presets, #id, onDelete: KeyAction.cascade)();
+  IntColumn get exerciseId =>
+      integer().references(Exercises, #id, onDelete: KeyAction.cascade)();
+  IntColumn get position => integer()();
+}

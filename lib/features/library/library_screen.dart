@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lift_off/core/db/database.dart';
+import 'package:lift_off/core/theme/app_theme.dart';
 import 'package:lift_off/features/history/history_screen.dart';
 import 'package:lift_off/features/library/library_providers.dart';
 import 'package:lift_off/features/library/widgets/add_exercise_sheet.dart';
@@ -19,7 +20,7 @@ class LibraryScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lift Off'),
+        title: const GradientTitle(),
         actions: [
           IconButton(
             key: const Key('history-button'),

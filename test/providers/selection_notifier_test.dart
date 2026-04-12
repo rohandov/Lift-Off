@@ -45,4 +45,11 @@ void main() {
     notifier.clear();
     expect(container.read(selectionProvider), isEmpty);
   });
+
+  test('loadFrom replaces selection with given IDs', () {
+    final notifier = container.read(selectionProvider.notifier);
+    notifier.toggle(1);
+    notifier.loadFrom([5, 3, 7]);
+    expect(container.read(selectionProvider), [5, 3, 7]);
+  });
 }

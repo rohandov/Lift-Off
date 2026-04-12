@@ -36,4 +36,6 @@ class SelectionNotifier extends Notifier<List<int>> {
   }
 
   void clear() => state = const [];
+
+  void loadFrom(List<int> ids) => state = ids;
 }

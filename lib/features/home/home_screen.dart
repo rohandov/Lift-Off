@@ -5,6 +5,7 @@ import 'package:lift_off/core/theme/app_theme.dart';
 import 'package:lift_off/core/widgets/gradient_card.dart';
 import 'package:lift_off/features/history/history_screen.dart';
 import 'package:lift_off/features/library/library_screen.dart';
+import 'package:lift_off/features/presets/presets_screen.dart';
 import 'package:lift_off/features/settings/settings_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -13,7 +14,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lift Off')),
+      appBar: AppBar(title: const GradientTitle()),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
         children: [
@@ -44,6 +45,48 @@ class HomeScreen extends ConsumerWidget {
                           SizedBox(height: 4),
                           Text(
                             'Browse and start a workout',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          GradientCard(
+            gradient: gradientForId(3),
+            child: InkWell(
+              key: const Key('home-presets-button'),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PresetsScreen()),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Icon(Icons.bookmarks_outlined, size: 32),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Presets',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Quick-start saved workouts',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 13,
