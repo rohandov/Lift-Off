@@ -21,6 +21,7 @@ class LibraryScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const GradientTitle(),
+        centerTitle: true,
         actions: [
           IconButton(
             key: const Key('history-button'),
